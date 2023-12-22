@@ -1,95 +1,92 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>Обновить новость</title>
+    <title>Update News</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <!-- Custom Style -->
     <link rel="stylesheet" href="../static/css/style.css" th:href="@{css/style.css}" type="text/css">
 </head>
-
 <body>
-    <div class="container mt-5">
-        <h2>Обновить новость</h2>
-        <!-- Update News Form -->
-        <form th:action="@{/news/update}" th:object="${updateNews}" method="post" enctype="multipart/form-data">
-            <input type="hidden" th:field="*{id}" />
 
-            <!-- Form Group for the news title -->
-            <div class="form-group">
-                <label for="title">Заголовок:</label>
-                <input type="text" id="title" class="form-control" th:field="*{title}" required>
-            </div>
+<div class="container mt-5">
+    <h2>Update News</h2>
+    <!-- Update News Form -->
+    <form th:action="@{/news/update}" th:object="${updateNews}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}"/>
 
-            <!-- Form Group for the publication date -->
-            <div class="form-group">
-                <label for="publicationDate">Дата публикации:</label>
-                <input type="date" class="form-control" id="publicationDate" th:field="*{date}" required>
-            </div>
+        <!-- Form Group for the news title -->
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" class="form-control" th:field="*{title}" required>
+        </div>
 
-            <!-- Form Group for the news body -->
-            <div class="form-group">
-                <label for="body">Тело новости:</label>
-                <textarea class="form-control" id="body" th:field="*{body}" required rows="5"></textarea>
-            </div>
+        <!-- Form Group for the publication date -->
+        <div class="form-group">
+            <label for="publicationDate">Publication Date:</label>
+            <input type="date" class="form-control" id="publicationDate" th:field="*{date}" required>
+        </div>
 
-            <!-- Form Group for image selection -->
-            <div class="form-group d-flex align-items-baseline">
-                <label for="image" class="btn btn-primary">
-                    <input type="file" style="display: none;" th:field="*{image}" id="image" accept="image/*"
-                        onchange="previewImage(this)">
-                    Выбрать картинку
-                </label>
-                <button type="button" class="btn btn-primary ml-2" onclick="cancelImageSelection()">Отменить
-                    выбор</button>
-            </div>
+        <!-- Form Group for the news body -->
+        <div class="form-group">
+            <label for="body">News Text:</label>
+            <textarea class="form-control" id="body" th:field="*{body}" required rows="5"></textarea>
+        </div>
 
-            <!-- Form Group for image preview -->
-            <div class="form-group" id="previewContainer">
-                <img id="imagePreview" th:src="${updateNews.image}" alt="" />
-            </div>
+        <!-- Form Group for image selection -->
+        <div class="form-group d-flex align-items-baseline">
+            <label for="image" class="btn btn-primary">
+                <input type="file" style="display: none;" th:field="*{image}" id="image" accept="image/*"
+                       onchange="previewImage(this)">
+                Choose image
+            </label>
+            <button type="button" class="btn btn-primary ml-2" onclick="cancelImageSelection()">Cancel image</button>
+        </div>
 
-            <!-- Submit Button for updating news -->
-            <button type="submit" class="btn btn-primary">Обновить</button>
-        </form>
-    </div>
+        <!-- Form Group for image preview -->
+        <div class="form-group" id="previewContainer">
+            <img id="imagePreview" th:src="${updateNews.image}" alt=""/>
+        </div>
 
-    <script>
-        // Set the current date for the publicationDate field
-        document.getElementById("publicationDate").valueAsDate = new Date();
+        <!-- Submit Button for updating news -->
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
 
-        // Function to preview selected image
-        function previewImage(input) {
-            var preview = document.getElementById('imagePreview');
-            var file = input.files[0];
-            var reader = new FileReader();
+<script>
+    // Set the current date for the publicationDate field
+    document.getElementById("publicationDate").valueAsDate = new Date();
 
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            };
+    // Function to preview selected image
+      function previewImage(input) {
+        var preview = document.getElementById('imagePreview');
+        var file = input.files[0];
+        var reader = new FileReader();
 
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = "";
-            }
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
         }
+    }
 
-        // Function to cancel image selection
-        function cancelImageSelection() {
-            document.getElementById('image').value = ''; // Clear selected file
-            document.getElementById('imagePreview').src = ''; // Clear image preview
-        }
+    // Function to cancel image selection
+    function cancelImageSelection() {
+        document.getElementById('image').value = ''; // Очистка выбранного файла
+        document.getElementById('imagePreview').src = ''; // Очистка превью картинки
+    }
 
-    </script>
+</script>
 
-    <!-- Bootstrap and related JavaScript libraries -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- Bootstrap and related JavaScript libraries -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 </body>
-
 </html>
