@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf">
+<head>
+    <meta charset="UTF-8">
+    <title>Лента новостей</title>
+    <meta http-equiv="Content-Type" content="text/html"/>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{css/style.css}" type="text/css">
+</head>
+<body>
+<!-- Header section -->
+<header th:insert="~{navbar :: navbar}"></header>
+
+<!-- Form for selecting the number of news per page and the current page -->
+<div class="form-container">
+    <form id="newsForm" th:action="@{/news}" method="GET">
+        <label for="pageSize">Количество новостей на странице:</label>
+        <select id="pageSize" name="pageSize" onchange="updatePageSize()">
+            <option value="10" th:selected="${pageSize == 10}">10</option>
+            <option value="20" th:selected="${pageSize == 20}">20</option>
+            <option value="50" th:selected="${pageSize == 50}">50</option>
+        </select>
+        <input type="hidden" id="currentPage" name="currentPage" value="1">
+    </form>
+</div>
+
+<div class="form-container">
+    <!-- Form for selecting news background color -->
+    <form id="colorForm" th:action="@{/news/saveColors}" method="post">
+        <label for="newsColor">Цвет фона новости:</label>
+        <input type="color" id="newsColor" name="newsColor" th:value="${newsColor}"
+               oninput="updateNewsBackgroundColor()" value="#FFFFFF">
+        <button type="submit" class="btn btn-secondary">Сохранить цвет</button>
+    </form>
+</div>
+
+
+<div class="container">
+    <div th:each="news : ${newsList}" class="news-item d-flex" th:style="'background-color: ' + ${newsColor}">
+        <div class="info-group flex-grow-1">
+            <h2 th:text="${news.getTitle}" class="news-title"></h2>
+            <p>
+                <span th:text="${news.getDate()}" class="news-date"></span>
+                <br/>
+                <span th:text="${news.getBody()}" class="news-body"></span>
+            </p>
+        </div>
+
+        <div class="dropdown-group text-end">
+            <!-- Ellipsis to open the dropdown list -->
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ...
+                </button>
+                <!-- Dropdown list with options "Update News" and "Delete News" -->
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- Form for deleting news -->
+                    <form th:action="@{'/news/delete/' + ${news.id}}" method="post">
+                        <button type="submit" class="dropdown-item">Удалить новость</button>
+                    </form>
+                    <!-- Form for updating news -->
+                    <form th:action="@{'/news/update/' + ${news.id}}" method="get">
+                        <button type="submit" class="dropdown-item">Обновить новость</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- News Image -->
+            <img class="news-image" th:src="${news.getImage()}" alt="">
+        </div>
+    </div>
+</div>
+
+<!-- Pagination links to navigate between different pages -->
+<div class="pagination-container">
+    <th:block th:if="${totalPages > 1}">
+        <th:block th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+            <a th:href="@{/news(pageSize=${pageSize}, currentPage=${pageNumber})}"
+               th:text="${pageNumber}" class="pagination-link"
+               th:classappend="${pageNumber == currentPage} ? 'active' : ''"></a>
+        </th:block>
+    </th:block>
+</div>
+
+<script>
+    // Update the pageSize value when selecting a new value in the dropdown
+    function updatePageSize() {
+        var pageSizeSelect = document.getElementById("pageSize");
+        var currentPageInput = document.getElementById("currentPage");
+        var selectedValue = pageSizeSelect.value;
+        currentPageInput.value = "1"; // Reset currentPage when changing pageSize
+        document.getElementById("newsForm").submit();
+    }
+
+    // Update and set the background color for each news item
+    function updateNewsBackgroundColor() {
+        var newsColorInput = document.getElementById("newsColor");
+        var newsItems = document.querySelectorAll('.news-item');
+        var newsColor = newsColorInput.value;
+        newsItems.forEach(function(newsItem) {
+            newsItem.style.backgroundColor = newsColor;
+        });
+    }
+
+</script>
+
+<!-- Bootstrap and related JavaScript libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
