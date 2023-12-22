@@ -36,3 +36,6 @@
 
 7. Page navigation:
    - On the main page, use the bottom block with page numbers to switch between news pages.
+
+
+![](https://github.com/sergek1/NewsCrud/blob/main/materials/news.gif)
